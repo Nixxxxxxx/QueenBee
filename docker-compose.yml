@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+ queenbee_web:
+    image: queen_bee_web
+    build: .
+    container_name: Web
+    ports:
+     - "8881:80"

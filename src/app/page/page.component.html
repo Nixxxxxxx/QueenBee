@@ -1,0 +1,131 @@
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-3 bg-light text-center pt-5">
+        <div class="row">
+          <div class="col-sm-12 my-2">
+            <mat-accordion>
+              <mat-expansion-panel (opened)="panelOpenState = true"
+                                   (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    Request
+                  </mat-panel-title>
+                  <mat-panel-description>
+                   {{panelOpenState ? '-' : 'New Quest'}}
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <mat-card>
+                  <mat-card-content>
+                    <input matInput placeholder="Randoms" [(ngModel)]="request_pangram" name="request_pangram" >
+                    <button mat-raised-button color="primary" class="col-sm-4 my-2" (click)="requestPangram()">Go</button>
+                  </mat-card-content>
+                </mat-card>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+          <div class="col-sm-12">
+            <mat-accordion>
+              <mat-expansion-panel (opened)="panelOpenState = true"
+                                   (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    RESULT
+                  </mat-panel-title>
+                  <mat-panel-description>
+                   {{panelOpenState ? '-' : easyMode ? 'All words' :'Founds'}}
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <mat-card>
+                  <mat-card-content>
+                    <mat-list role="list" *ngFor="let item of getGameWords()">
+                      <a [ngStyle]="{'color': wordWasFound(item.name)? 'green' : 'red'}"  class="info" (click)="getInfo(item.name)">{{item.name}}</a>
+                    </mat-list>
+                  </mat-card-content>
+                </mat-card>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </div>
+    </div>
+
+    <div class="col-md-5 py-3">
+      <mat-card class="shadow">
+        <div class="row">
+          <div class="col-sm-6">
+            <mat-card-header>
+              <mat-card-subtitle>Words Left: {{getWordsRemaining()}}</mat-card-subtitle>
+              <mat-card-subtitle>Points Remaining: {{getPointsRemaining()}}</mat-card-subtitle>
+              <mat-card-subtitle *ngIf="hasPangram()">Pangrams: {{pangram.pangramCount}}</mat-card-subtitle>
+            </mat-card-header>
+            <input [(ngModel)]="word"  [ngStyle]="{'color':  easyMode ? existsButNotFound()? 'green' : 'red' : 'black'}" (keyup.enter)="submit()" >
+          </div>
+          <div class="col-sm-6">
+            <Label class="example-slider">difficulty</Label>
+            <mat-slider
+                      class="example-slider"
+                      [max]=6
+                      [min]=0
+                      [step]=2
+                      [tickInterval]=1
+                      [(ngModel)]="difficulty">
+            </mat-slider>
+            <hr>
+            <mat-slider
+            class="example-slider"
+            [max]=pangram.maxPoint
+            [min]=0
+            [step]=2
+            [tickInterval]=1
+            [disabled]=true
+            [(ngModel)]="points">
+          </mat-slider>
+          <Label class="example-slider">Progress</Label>
+          </div>
+        </div>
+        <mat-card-content>
+          <div class="loader">
+            <div  id="main_hexagon">
+              <ul   class="hexagon-container">
+                <li id="hex_1" class="hexagon hex_1" ><h1 [ngStyle]="{'color':  easyMode ? characterCanBeAppendedToMakeWord(c7)? 'yellow' : 'black' : 'black'}" (click)="post(c7)"><b>{{c7}}</b></h1></li>
+                <li id="hex_2" class="hexagon hex_2" ><h1 [ngStyle]="{'color':  easyMode ? characterCanBeAppendedToMakeWord(c6)? 'yellow' : 'black' : 'black'}" (click)="post(c6)"><b>{{c6}}</b></h1></li>
+                <li id="hex_3" class="hexagon hex_3" ><h1 [ngStyle]="{'color':  easyMode ? characterCanBeAppendedToMakeWord(c5)? 'yellow' : 'black' : 'black'}" (click)="post(c5)"><b>{{c5}}</b></h1></li>
+                <li id="hex_4" class="hexagon hex_4" ><h1 [ngStyle]="{'color':  easyMode ? characterCanBeAppendedToMakeWord(c4)? 'yellow' : 'black' : 'black'}" (click)="post(c4)"><b>{{c4}}</b></h1></li>
+                <li id="hex_5" class="hexagon hex_5" ><h1 [ngStyle]="{'color':  easyMode ? characterCanBeAppendedToMakeWord(c3)? 'yellow' : 'black' : 'black'}" (click)="post(c3)"><b>{{c3}}</b></h1></li>
+                <li id="hex_6" class="hexagon hex_6" ><h1 [ngStyle]="{'color':  easyMode ? characterCanBeAppendedToMakeWord(c2)? 'yellow' : 'black' : 'black'}" (click)="post(c2)"><b>{{c2}}</b></h1></li>
+                <li id="hex_7" class="hexagon hex_7" ><h1 [ngStyle]="{'color':  easyMode ? characterCanBeAppendedToMakeWord(c1)? 'green' : 'black' : 'black'}" (click)="post(c1)"><b>{{c1}} </b></h1></li>
+              </ul>
+
+            </div>
+            <img id="completed_id" src="https://pre00.deviantart.net/7b60/th/pre/f/2012/118/c/1/cutie_mark___blind_bag_bumblesweet_by_durpy-d4xw8vv.png" width="100%">
+          </div>
+          <hr class="my-4">
+      </mat-card-content>
+        <mat-card-actions>
+          <div class="row justify-content-between px-2">
+            <button mat-raised-button class="accent col-sm-2"  (click)="correct()"> &larr;</button>
+            <button mat-fab color="warn" class="col-sm-4 text-center" (click)="shuffle()">0</button>
+            <button mat-raised-button class="primary col-sm-4" (click)="submit()">OK</button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div id="info" class="info-word  text-center">
+  <div class="info-inner">
+    <h2 class="text-center">{{infoWord}}</h2>
+        <ul>
+          <li *ngFor="let item of infoWordDefinition">
+            {{item}}
+          </li>
+        </ul>
+    <hr>
+    <button mat-raised-button color="primary" class="col-sm-4 float-end" (click)="closeInfo()">Close</button>
+  </div>
+</div>
+
+<div id="result" class="result-word" [ngStyle]="{'background-color':  wordExist ? 'green' : 'red' }" >
+  <h3 class="text-center result">{{result}}</h3>
+</div>

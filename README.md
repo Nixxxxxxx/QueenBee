@@ -1,4 +1,7 @@
 # QueenBeeWeb
+## Deploying to github pages
+https://blog.logrocket.com/deploying-single-page-angular-apps-to-github-pages/
+
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.6.
 
